@@ -1,0 +1,43 @@
+#!/sbin/openrc-run
+# Distributed under the terms of the GNU General Public License v2
+# $Header: $
+
+_logfile=/var/spool/Qme/info/Qme.log
+_pidfile=/var/run/Qme.pid
+_prog=/usr/bin/Qme
+
+#_lockfile=/var/spool/QQ/info/lockfile
+# _vfile=/var/spool/queue/info/version
+
+start() {
+    ebegin "Starting queuing services: "    
+    start-stop-daemon --background --start --quiet \
+		      -1 $_logfile -2 $_logfile \
+		      --make-pidfile --pidfile $_pidfile \
+		      --exec $_prog \
+		      -- -Y
+    
+    eend $?
+}
+
+stop() {
+    ebegin "Shutting down queuing services: "
+    start-stop-daemon --stop --exec $_prog \
+		      --pidfile $_pidfile
+    eend $?
+}
+
+rhstatus() {
+	status -p $_pidfile $_prog
+	return $?
+}
+
+
+reload() {
+    ebegin "Reloading queuing services: "
+    start-stop-daemon --exec $_prog \
+    		      -- -Y  \
+		      --pidfile $_pidfile \
+		      -s 1
+    eend $?
+}
