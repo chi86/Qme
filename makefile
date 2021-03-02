@@ -16,7 +16,9 @@ INCLUDE = -I.
 # compiler flags:
 #  -g    adds debugging information to the executable file
 #  -Wall turns on most, but not all, compiler warnings
-CFLAGS  = -g -Wall -Ofast -g -Warray-bounds -fsanitize=address
+# CFLAGS  = -g -Wall -Ofast -g -Warray-bounds -fsanitize=address
+CFLAGS  = -Ofast
+
 
 DEPS = main.o Task.o List.o Queue.o
 
