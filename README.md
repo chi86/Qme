@@ -99,7 +99,7 @@ env                 : PATH=/usr/bin:/bin:/opt/bin:/usr/local/bin
 
 ```
 
-Status of queued tasks
+Status of queued tasks (highlighted in fancy colors)
 
 ```console
 foo@bar:~$ Qme
