@@ -114,7 +114,7 @@ Qme Version  0.9
     22        0           test5   queued      6        4  Tue Mar  2 13:57:08 2021
     18        0           test1   queued      6        4  Tue Mar  2 13:57:08 2021
     20        0           test3   queued      6        4  Tue Mar  2 13:57:08 2021
-     7    20705       motorbike  running      6       17  Tue Mar  2 13:43:39 2021
+     7    20705       motorbike  <div class="text-red mb-2">running</div>      6       17  Tue Mar  2 13:43:39 2021
     13    23574           test1  running      6        0  Tue Mar  2 14:00:52 2021
 
 
