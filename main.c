@@ -76,12 +76,13 @@ void _logging(char* buffer);
  */
 int main(int argc, char* argv[])
 {
+  int i;
   if(argc == 1) {
     // If no command line arguments are passed, execute the cli
     queue_cli();
   }
   else {
-    for(int i=1;i<argc;i++) {
+    for(i=1;i<argc;i++) {
       /* printf("\t *** argument : %s\n",argv[i]); */
 
       if(strcmp(argv[i],"-h")==0) {

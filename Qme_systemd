@@ -1,0 +1,25 @@
+# Qme systemd service
+
+[Unit]
+SourcePath=/etc/rc.d/init.d/Qme
+Description=Starts and stops Qme queuing system
+After=network-online.target
+After=network.service
+Conflicts=shutdown.target
+
+[Service]
+Type=forking
+Restart=always
+TimeoutSec=5min
+IgnoreSIGPIPE=false
+Environment=/etc/rc.d/init.d/functions
+Environment=/etc/bashrc
+KillMode=process
+GuessMainPID=no
+RemainAfterExit=no
+PIDFile=/var/run/Qme.pid
+ExecStart=/etc/rc.d/init.d/Qme start
+ExecStop=/etc/rc.d/init.d/Qme stop
+
+[Install]
+WantedBy=multi-user.target
