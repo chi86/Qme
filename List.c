@@ -22,9 +22,9 @@ void print_list(list_t ** head)
   size_t len = 0;
   ssize_t read;
 
-  char* ret;
+  char* ret,ret_solver;
   /* int lineCount; */
-  char tmp[2000];
+  char tmp[2000],solver[2000];
   int endTime,currentTime0,currentTime;
   int args;
   
@@ -59,8 +59,16 @@ void print_list(list_t ** head)
       while ((read = getline(&line, &len, controlDFile)) != -1) {
 	/* printf("Retrieved line of length %zu:\n", read); */
         //printf("%s", line);
-	ret=strstr(line,"endTime");
-	if(ret) {
+
+	// ret=strstr(line,"application"); --> address pointer to entry
+	if(strstr(line,"application")) {
+	  if(!strstr(line,"//")) {
+	    /* printf("%d : %p: %s\n",lineCount,ret,line); */
+	    sscanf(line, "%s %s\n", tmp, solver);	    
+	  }
+	}
+        
+	if(strstr(line,"endTime")) {
 	  if(!strstr(line,"//") && !strstr(line,"stopAt")) {
 	    /* printf("%d : %p: %s\n",lineCount,ret,line); */
 	    sscanf(line, "%s %d;\n", tmp, &endTime);	    
@@ -70,25 +78,37 @@ void print_list(list_t ** head)
       }
       fclose(controlDFile);
 
-      // get currentTime from processor folder
-      currentTime=0;
+      // remove ; at end
+      solver[strlen(solver)-1] = '\0';
+
+      // check if simulation already started
       strcpy(controlDict,current->task->cwd);
-      if(current->task->nproc>1) strcat(controlDict,"processor0/");
-      d = opendir(controlDict);
-      while((dir = readdir(d)) != NULL) {
-	if( strcmp(dir->d_name,"." )!=0 &&
-	    strcmp(dir->d_name,"..")!=0    ) {
-	  /* printf("%s\n",dir->d_name); */
-	  if(!strstr(dir->d_name,"constant") && !strstr(line,"0")) {
-	    sscanf(dir->d_name, "%d",&currentTime0);
-	    currentTime=MAX(currentTime,currentTime0);
+      strcat(controlDict,"log.");
+      strcat(controlDict,solver);
+      /* printf("%42s %s\n","",controlDict); */
+      controlDFile = fopen(controlDict,"r");
+      if (controlDFile!=NULL) {
+	fclose(controlDFile);
+	
+	// get currentTime from processor folder
+	currentTime=0;
+	strcpy(controlDict,current->task->cwd);
+	if(current->task->nproc>1) strcat(controlDict,"processor0/");
+	d = opendir(controlDict);
+	while((dir = readdir(d)) != NULL) {
+	  if( strcmp(dir->d_name,"." )!=0 &&
+	      strcmp(dir->d_name,"..")!=0    ) {
+	    /* printf("%s\n",dir->d_name); */
+	    if(!strstr(dir->d_name,"constant") && !strstr(line,"0")) {
+	      sscanf(dir->d_name, "%d",&currentTime0);
+	      currentTime=MAX(currentTime,currentTime0);
+	    }
 	  }
 	}
+	/* printf("%d %d\n",currentTime,endTime); */
+	printf("%42s simulation progress=\033[0;35m%.2f \%\033[0m\n","",(100.0*currentTime/endTime));
       }
-      /* printf("%d %d\n",currentTime,endTime); */
-      printf("%42s simulation progress=\033[0;35m%.2f \%\033[0m\n","",(100.0*currentTime/endTime));
     }
-    
     current=current->next;
   }
 
