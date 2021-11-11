@@ -15,6 +15,21 @@ void print_list(list_t ** head)
   list_t * current = *head;
   char state[19];
   double diff_t;
+  
+  char controlDict[1000];
+  FILE * controlDFile;
+  char * line = NULL;
+  size_t len = 0;
+  ssize_t read;
+
+  char* ret;
+  /* int lineCount; */
+  char tmp[2000];
+  int endTime,currentTime0,currentTime;
+  int args;
+  
+  DIR *d;
+  struct dirent *dir;
 
   clock_t time0,time_now;
 
@@ -29,10 +44,58 @@ void print_list(list_t ** head)
     diff_t = difftime(time_now, time0)/60;
     
       
-    printf("%6d \033[0;33m%8d\033[0m %15s %19s %6d %8.0f \033[0;32m%26s\033[0m",current->task->id,current->task->pid,current->task->name,state,current->task->nproc,diff_t,asctime(localtime(&time0)));
+    printf("%6d \033[0;33m%8d\033[0m %25s %19s %6d %8.0f \033[0;32m%26s\033[0m",current->task->id,current->task->pid,current->task->name,state,current->task->nproc,diff_t,asctime(localtime(&time0)));
+
+    // Check if the task is a OpenFoam simulation
+    strcpy(controlDict,current->task->cwd);
+    strcat(controlDict,"system/controlDict");
+    /* printf("%42s %s\n","",controlDict); */
+    controlDFile = fopen(controlDict,"r");
+    if (controlDFile!=NULL) {
+      // if file exists --> its a OF simulation
+
+      // extract endTime from controlDict
+      /* lineCount=0; */
+      while ((read = getline(&line, &len, controlDFile)) != -1) {
+	/* printf("Retrieved line of length %zu:\n", read); */
+        //printf("%s", line);
+	ret=strstr(line,"endTime");
+	if(ret) {
+	  if(!strstr(line,"//") && !strstr(line,"stopAt")) {
+	    /* printf("%d : %p: %s\n",lineCount,ret,line); */
+	    sscanf(line, "%s %d;\n", tmp, &endTime);	    
+	  }
+	}
+	/* lineCount+=1; */
+      }
+      fclose(controlDFile);
+
+      // get currentTime from processor folder
+      currentTime=0;
+      strcpy(controlDict,current->task->cwd);
+      if(current->task->nproc>1) strcat(controlDict,"processor0/");
+      d = opendir(controlDict);
+      while((dir = readdir(d)) != NULL) {
+	if( strcmp(dir->d_name,"." )!=0 &&
+	    strcmp(dir->d_name,"..")!=0    ) {
+	  /* printf("%s\n",dir->d_name); */
+	  if(!strstr(dir->d_name,"constant") && !strstr(line,"0")) {
+	    sscanf(dir->d_name, "%d",&currentTime0);
+	    currentTime=MAX(currentTime,currentTime0);
+	  }
+	}
+      }
+      /* printf("%d %d\n",currentTime,endTime); */
+      printf("%42s simulation progress=\033[0;35m%.2f \%\033[0m\n","",(100.0*currentTime/endTime));
+    }
     
     current=current->next;
   }
+
+  
+
+    
+  
 }
 
 /*

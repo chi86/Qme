@@ -10,8 +10,12 @@
 
 #include "stdio.h"
 #include <stdlib.h>
+#include <dirent.h>
 
 #include "Task.h"
+
+#define MAX(x, y) (((x) > (y)) ? (x) : (y))
+#define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
 /*
  * Linked list

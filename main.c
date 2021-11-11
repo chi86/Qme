@@ -342,8 +342,8 @@ void queue_cli()
   printf("Queue Version %4.1f\n",queue_version(queue));
   printf("------------------\n\n");
   
-  printf("%6s %8s %15s %8s %6s %8s %25s\n","ID","pid","Name","Status","proc","Dt/min","Date");
-  printf("----------------------------------------------------------------------------------\n");
+  printf("%6s %8s %25s %8s %6s %8s %25s\n","ID","pid","Name","Status","proc","Dt/min","Date");
+  printf("--------------------------------------------------------------------------------------------\n");
 
   // state: 0 ... initialization
   //        1 ... queued
