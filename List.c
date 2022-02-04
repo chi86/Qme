@@ -106,7 +106,7 @@ void print_list(list_t ** head)
 	  }
 	}
 	/* printf("%d %d\n",currentTime,endTime); */
-	printf("%42s simulation progress=\033[0;35m%.2f \%\033[0m\n","",(100.0*currentTime/endTime));
+	printf("%42s simulation progress=\033[0;31m%.2f \%\033[0m\n","",(100.0*currentTime/endTime));
       }
     }
     current=current->next;
