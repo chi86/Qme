@@ -10,6 +10,11 @@
  * If the needed resources are available and the said task is next in line
  * the task will enter the RUNNING state, with the associated execution of the task.
  * When the execution is completed the task reaches the final FINISHED state.
+ *
+ +
+ + v1.2: an additional nproc file can be specified in /var/spool/Qme/info/
+ +       specifying the max number of used procs
+ +
  * 
  * (c) christoph irrenfried, chi86
  *
@@ -340,7 +345,8 @@ void queue_cli()
 
   // Header
   printf("Queue Version %4.1f\n",queue_version(queue));
-  printf("------------------\n\n");
+  printf("------------------\n");
+  printf("nproc: %d\n\n",queue->NPROC);
   
   printf("%6s %8s %25s %8s %6s %8s %25s\n","ID","pid","Name","Status","proc","Dt/min","Date");
   printf("--------------------------------------------------------------------------------------------\n");
@@ -574,7 +580,7 @@ void run_queue()
 
   printf("This system has %d processors configured and "
 	 "%d processors available.\n\n",
-	 get_nprocs_conf(), get_nprocs());
+	 queue->NPROC, get_nprocs());
 
   // Prepare all paths
   strcpy(queued_dir,root);
@@ -586,6 +592,24 @@ void run_queue()
   strcpy(finished_dir,root);
   strcat(finished_dir,"/finished/");
 
+    
+  
+  /*
+   * if task is in RUNNING state
+   * add up procs
+   */
+  add_tasks_to_queue(&queue->running,running_dir,2);
+  if(queue->running) {
+    list_temp=queue->running;
+    while(list_temp) {
+      temp=list_temp->task;
+      list_temp=list_temp->next;
+      queue->PROC+=temp->nproc;
+      removeID_list(&queue->running,temp->id);
+    }
+  }
+
+  
   // big loop
   while(1) {
     // INIT -> QUEUED
@@ -596,6 +620,9 @@ void run_queue()
      * check if needed resources are available to start task
      * if so QUEUED -> RUNNING
      */
+    /* printf("queue->NPROC          : %d\n",queue->NPROC); */
+    /* printf("queue->PROC           : %d\n\n",queue->PROC); */
+    
     if(queue->queued) {
       list_temp=queue->queued;
       while(list_temp) {
@@ -675,7 +702,7 @@ void run_queue()
 	}
       }
     }
-    
+
     /*
      * if task is in RUNNING state
      * check if it is still runnung

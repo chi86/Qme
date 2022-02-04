@@ -14,8 +14,8 @@ void queue_init(Queue* queue, char* path)
 {
   char fname[1000];
   FILE *fp;
+  int nproc;
 
-  queue->NPROC=get_nprocs_conf();
   queue->PROC=0;
   
   queue->queued=NULL;
@@ -33,6 +33,21 @@ void queue_init(Queue* queue, char* path)
     fclose(fp);
   } else {
     printf("can't read queue version file\n");
+  }
+
+  // read nproc file
+  strcpy(fname,queue->path);
+  strcat(fname,"/info/nprocs");
+  if( access( fname, F_OK ) == 0 ) {
+    // file exist
+    fp=fopen(fname,"r");
+    if(fscanf(fp, "%d", &nproc));
+    fclose(fp);
+    queue->NPROC=nproc;
+    //printf("nproc from file: %d\n",nproc);
+  } else {
+    printf("can't read nproc version file use get_nprocs_conf()\n");
+    queue->NPROC=get_nprocs_conf();
   }
 
   // read taskid, last task beeing processed
