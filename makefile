@@ -16,7 +16,7 @@ INCLUDE = -I.
 # compiler flags:
 #  -g    adds debugging information to the executable file
 #  -Wall turns on most, but not all, compiler warnings
-# CFLAGS  = -g -Wall -Ofast -g -Warray-bounds -fsanitize=address
+#CFLAGS  = -g -Wall -Ofast -g -Warray-bounds -fsanitize=address
 CFLAGS  = -Ofast
 
 
@@ -55,6 +55,7 @@ install:
 	install Qme_init /etc/init.d/Qme
 	install $(PRJNAME) /usr/bin
 
+	echo "cleanup log: rm /var/spool/Qme/info/Qme.log"
 	echo "Start init process:"
 	echo "	# /etc/init.d/Qme start"
 	echo "Add Qme to runlevel:"

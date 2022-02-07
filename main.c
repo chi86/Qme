@@ -430,12 +430,46 @@ void retrive_tasks(Queue *queue,char* root)
   
   char init_dir[1000];
   char queued_dir[1000];
-
-  strcpy(init_dir,root);
-  strcat(init_dir,"/init/");
   
   strcpy(queued_dir,root);
   strcat(queued_dir,"/queued/");
+
+  d = opendir(queued_dir);
+  
+  if(d) {
+    while((dir = readdir(d)) != NULL) {
+      if( strcmp(dir->d_name,"." )!=0 &&
+	  strcmp(dir->d_name,"..")!=0    ) {
+	sprintf(fname, "%s/queued/%s", root,dir->d_name);
+	
+	task = task_read(fname);
+
+	// Logging
+	sprintf(buffer, "%d _r_ task reading %s\n",task->id,fname);
+	/* printf("The direction of buffer is: %p\n",&buffer); */
+	_logging(buffer);
+
+	// set queued time
+	//task->time_queued=time(NULL);
+
+	// push task to the queued list, entering the QUEUED state
+	push_list(&queue->queued, task);
+
+	// make path
+	/* strcpy(newname,queued_dir); */
+	/* strcat(newname,task->qname); */
+
+	// update times
+	/* task_write(task, newname); */
+	/* task_write(task, fname); */
+      }
+    }
+    closedir(d);
+  }
+
+ 
+  strcpy(init_dir,root);
+  strcat(init_dir,"/init/");
 
   d = opendir(init_dir);
   
@@ -471,6 +505,11 @@ void retrive_tasks(Queue *queue,char* root)
     }
     closedir(d);
   }
+
+
+
+
+  
 }
 
 /*
@@ -626,6 +665,7 @@ void run_queue()
     if(queue->queued) {
       list_temp=queue->queued;
       while(list_temp) {
+	//printf("list_temp->task->->PROC   : %d\n\n",list_temp->task->nproc);
 	// resources?
 	if(queue->NPROC>=queue->PROC+list_temp->task->nproc) {  
 	  temp=list_temp->task;
