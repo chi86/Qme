@@ -609,6 +609,10 @@ void run_queue()
   pid_t fork_pid;
 
   int fd;
+
+  int al1,al2;
+  struct stat sts;
+ 
     
   Queue *queue = malloc(sizeof(Queue));
   queue_init(queue,root);
@@ -644,9 +648,14 @@ void run_queue()
       temp=list_temp->task;
       list_temp=list_temp->next;
       queue->PROC+=temp->nproc;
-      removeID_list(&queue->running,temp->id);
+      //removeID_list(&queue->running,temp->id);
     }
   }
+
+  // logging
+  sprintf(buffer, "restarting Qme (%d/%d)\n",queue->PROC,queue->NPROC);
+  printf(buffer);
+  _logging(buffer);
 
   
   // big loop
@@ -754,20 +763,29 @@ void run_queue()
 	temp=list_temp->task;
 	list_temp=list_temp->next;
 
+	/* //al1=waitpid(temp->pid, &status, WNOHANG); */
+	/* al1=waitpid(temp->pid, &status, 0); */
+	  
+	/* sprintf(buffer, "... %d status: (%d)\n",temp->pid,al1); */
+	/* printf(buffer); */
+	/* _logging(buffer); */
+
 	/*
 	 * is task still alive?
 	 */
-	if(waitpid(temp->pid, &status, WNOHANG)>0) {
+	//if(waitpid(temp->pid, &status, WNOHANG)>0) {
+	sprintf(buffer, "/proc/%d",temp->pid);
+        if (stat(buffer, &sts) == -1 && errno == ENOENT) {
 	  // nope sucker is gone
 
 	  // free resources
 	  queue->PROC-=temp->nproc;
-	  
+
 	  // logging
 	  sprintf(buffer, "%d _f_ task (pid %d) finised (%d/%d)\n",temp->id,temp->pid,queue->PROC,queue->NPROC);
 	  printf(buffer);
 	  _logging(buffer);
-
+	  
 	  // enter final FINISHED stage
 	  temp->time_finished=time(NULL);
 	  

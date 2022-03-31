@@ -1,0 +1,21 @@
+#!/bin/bash
+
+#name=$(head -1 input.dat | sed "s/\s//g" | sed "s/#//g")
+name=$(cat input.dat | grep '"anode"' | cut -d":" -f2 | sed "s/\s//g" | sed "s/#//g" | sed "s/,//g" | sed 's/"//g')
+
+# read whole list and remove { & }
+# attack=$(cat input.dat | cut -d ":" -f2 | sed "/[{}]/d")
+NACA=$(cat input.dat | grep "NACA" | cut -d ":" -f2 | sed "s/\"//g"| sed "s/,//g")
+attack=$(cat input.dat | grep "attack" | cut -d ":" -f2 | sed "s/\"//g"| sed "s/,//g")
+
+
+# remove whitespace
+#name=$(echo $name$NACA"_"$attack | sed "s/\s//g")
+#name=$(echo "IonAs_"$attack | sed "s/\s//g" | sed "s/,//g")
+name=$(echo $name"_"$attack | sed "s/\s//g")
+
+# number of processes
+proc=$(cat system/decomposeParDict |  grep "numberOfSubdomains" | tail -1 | cut -d" " -f 2 | cut -d";" -f 1)
+
+echo "Qme -a $name Allrun $proc"
+Qme -a $name Allrun $proc
