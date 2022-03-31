@@ -74,6 +74,7 @@ void add_tasks_to_queue(list_t ** qlist, char * input,int state);
 void _help();
 void _deamonize();
 void _logging(char* buffer);
+int _retrivePROC(list_t ** qlist);
 
 
 /*
@@ -223,6 +224,26 @@ void _deamonize()
   run_queue();
 }
 
+/*
+ * retrive number of prcesses
+ */
+int _retrivePROC(list_t ** qlist) {
+  int proc=0;
+  
+  list_t *list_temp = NULL;
+  Task *temp;
+  
+  if(qlist) {
+    list_temp=*qlist;
+    while(list_temp) {
+      temp=list_temp->task;
+      list_temp=list_temp->next;
+      proc+=temp->nproc;
+    }
+  }
+  return proc;
+}
+
 
 /*
  * delete a task by pid
@@ -337,25 +358,36 @@ void queue_cli()
 
   char queued_dir[1000];
   char running_dir[1000];
+  
+  int proc_run,proc_queued;
 
   strcpy(queued_dir,root);
   strcat(queued_dir,"/queued/");
   strcpy(running_dir,root);
   strcat(running_dir,"/running/");
 
-  // Header
-  printf("Queue Version %4.1f\n",queue_version(queue));
-  printf("------------------\n");
-  printf("nproc: %d\n\n",queue->NPROC);
-  
-  printf("%6s %8s %25s %8s %6s %8s %25s\n","ID","pid","Name","Status","proc","Dt/min","Date");
-  printf("--------------------------------------------------------------------------------------------\n");
 
   // state: 0 ... initialization
   //        1 ... queued
   //        2 ... running
   add_tasks_to_queue(&queue->queued,queued_dir,1);
   add_tasks_to_queue(&queue->running,running_dir,2);
+
+  // retrive number of running processes  
+  proc_run=_retrivePROC(&queue->running);
+  // retrive number of queued processes  
+  proc_queued=_retrivePROC(&queue->queued);
+  
+  // Header
+  printf("Queue Version %4.1f\n",queue_version(queue));
+  printf("------------------\n");
+  printf("        nproc: %d\n",queue->NPROC);
+  printf("running  proc: %d\n",proc_run);
+  printf(" queued  proc: %d\n\n",proc_queued);
+  
+  printf("%6s %8s %25s %8s %6s %8s %25s\n","ID","pid","Name","Status","proc","Dt/min","Date");
+  printf("--------------------------------------------------------------------------------------------\n");
+
   
   // print all tasks, appling same format as above
   print_list(&queue->queued);
@@ -773,10 +805,22 @@ void run_queue()
 	/*
 	 * is task still alive?
 	 */
+
+
+	/* int ret; */
+        /* ret = getpgid(temp->pid); //kill(temp->pid,SIGCHLD); */
+	/* sprintf(buffer, "... %d = %d\n",temp->pid,ret); */
+	/* printf(buffer); */
+	/* _logging(buffer); */
+
+	// is needed otherwise the process defuncts
+	waitpid(temp->pid, &status, WNOHANG);
+
 	//if(waitpid(temp->pid, &status, WNOHANG)>0) {
-	sprintf(buffer, "/proc/%d",temp->pid);
-        if (stat(buffer, &sts) == -1 && errno == ENOENT) {
-	  // nope sucker is gone
+	/* sprintf(buffer, "/proc/%d",temp->pid); */
+        /* if (stat(buffer, &sts) == -1 && errno == ENOENT) { */
+	if(getpgid(temp->pid) == -1) {
+	// nope sucker is gone
 
 	  // free resources
 	  queue->PROC-=temp->nproc;
