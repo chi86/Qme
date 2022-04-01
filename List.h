@@ -28,7 +28,7 @@ typedef struct list {
 /*
  * linked list members
  */
-void print_list(list_t ** head);
+void print_list(list_t ** head,int verbose);
 void push_list(list_t ** head, Task *task);
 Task * pop_list(list_t ** head);
 void removeID_list(list_t ** head, int id);

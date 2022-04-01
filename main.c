@@ -63,7 +63,7 @@ void retrive_tasks(Queue *queue,char* root);
 void run_queue();
 void addTo_queue(char * file, char * name, char * script, char * nproc);
 void list_queue();
-void queue_cli();
+void queue_cli(int verbose);
 void deleteFrom_queue(char * pidC);
 void list_tasks(char * input,char * state);
 void add_tasks_to_queue(list_t ** qlist, char * input,int state);
@@ -85,7 +85,7 @@ int main(int argc, char* argv[])
   int i;
   if(argc == 1) {
     // If no command line arguments are passed, execute the cli
-    queue_cli();
+    queue_cli(0);
   }
   else {
     for(i=1;i<argc;i++) {
@@ -108,6 +108,10 @@ int main(int argc, char* argv[])
 	if(argc==3) {
 	  deleteFrom_queue(argv[i+1]);
 	}
+	return 0;
+      }
+      else if(strcmp(argv[i],"-v")==0) {
+	queue_cli(1);
 	return 0;
       }
       else if(strcmp(argv[i],"-Y")==0) {
@@ -349,7 +353,7 @@ void addTo_queue(char * file, char * name, char * script, char * nproc)
 /*
  * queue_cli
  */
-void queue_cli()
+void queue_cli(int verbose)
 {
   char* root=INSTALL_DIR;
  
@@ -390,8 +394,8 @@ void queue_cli()
 
   
   // print all tasks, appling same format as above
-  print_list(&queue->queued);
-  print_list(&queue->running);
+  print_list(&queue->queued,verbose);
+  print_list(&queue->running,verbose);
   
   // clean up
   queue_stop(queue);

@@ -1,3 +1,3 @@
 echo "start"
-sleep 20
+sleep 2000
 echo "end"

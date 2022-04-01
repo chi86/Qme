@@ -10,7 +10,7 @@
 /*
  * Print all tasks of list head
  */
-void print_list(list_t ** head)
+void print_list(list_t ** head,int verbose)
 {
   list_t * current = *head;
   char state[19];
@@ -45,6 +45,10 @@ void print_list(list_t ** head)
     
       
     printf("%6d \033[0;33m%8d\033[0m %25s %19s %6d %8.0f \033[0;32m%26s\033[0m",current->task->id,current->task->pid,current->task->name,state,current->task->nproc,diff_t,asctime(localtime(&time0)));
+
+    if(verbose == 1) {
+      printf("\t %25s\n",current->task->cwd);
+    }
 
     // Check if the task is a OpenFoam simulation
     strcpy(controlDict,current->task->cwd);
