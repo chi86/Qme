@@ -119,3 +119,8 @@ Qme Version  0.9
 
 
 ```
+
+# Changelog
+
+- version 1.0: Basic functions
+- version 2.0: Bugfix, extended functionality
