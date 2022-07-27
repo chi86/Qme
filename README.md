@@ -89,7 +89,7 @@ foo@bar:~$ systemctl status Qme.service
 
 # Usage
 
-Usage: Qme [FLAG] [ARGUMENTS] \
+Usage: Qme [FLAG] [ARGUMENTS]
 
 |FLAG  |   interpretation                 |
 |------|----------------------------------|
