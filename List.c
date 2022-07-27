@@ -71,6 +71,8 @@ void print_list(list_t ** head,int verbose)
 	    sscanf(line, "%s %s\n", tmp, solver);	    
 	  }
 	}
+
+	/* printf("test %s\n",line); */
         
 	if(strstr(line,"endTime")) {
 	  if(!strstr(line,"//") && !strstr(line,"stopAt")) {
@@ -81,7 +83,7 @@ void print_list(list_t ** head,int verbose)
 	/* lineCount+=1; */
       }
       fclose(controlDFile);
-
+ 
       // remove ; at end
       solver[strlen(solver)-1] = '\0';
 
@@ -91,6 +93,8 @@ void print_list(list_t ** head,int verbose)
       strcat(controlDict,solver);
       /* printf("%42s %s\n","",controlDict); */
       controlDFile = fopen(controlDict,"r");
+
+       
       if (controlDFile!=NULL) {
 	fclose(controlDFile);
 	
@@ -99,6 +103,11 @@ void print_list(list_t ** head,int verbose)
 	strcpy(controlDict,current->task->cwd);
 	if(current->task->nproc>1) strcat(controlDict,"processor0/");
 	d = opendir(controlDict);
+
+	     
+	/* printf("test %s\n",controlDict); */
+      
+	
 	while((dir = readdir(d)) != NULL) {
 	  if( strcmp(dir->d_name,"." )!=0 &&
 	      strcmp(dir->d_name,"..")!=0    ) {
