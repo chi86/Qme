@@ -38,7 +38,7 @@ Creates the spool environment
 ```
 
 ## Init service
-
+The init script will be copied automatically to:
 ```
 /etc/init.d
 |  
@@ -56,6 +56,36 @@ foo@bar:~$ sudo /etc/init.d/Qme start
 ```console
 foo@bar:~$ sudo rc-update add Qme
 ```
+
+### Checking up on service
+```console
+foo@bar:~$ /etc/init.d/Qme status
+```
+
+## systemd
+The systemd script needs to be copied to:
+```
+/etc/systemd/system
+|  
+|   Qme.service
+```
+
+### Starting the systemd service
+
+```console
+foo@bar:~$ systemctl start Qme.service
+```
+
+### Starting adding to runlevel
+```console
+foo@bar:~$ systemctl enable Qme.service
+```
+
+### Checking up on service
+```console
+foo@bar:~$ systemctl status Qme.service
+```
+
 
 # Usage
 
