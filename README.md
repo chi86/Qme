@@ -89,21 +89,22 @@ foo@bar:~$ systemctl status Qme.service
 
 # Usage
 
-Usage: Qme [FLAG] [ARGUMENTS]
+Usage: Qme [FLAG] [ARGUMENTS] \
 
-FLAG     interpretation
-  -h     Help (this!)
-  -Y     run Queue
-  -X     Demonize the Queue
-  -a     submit add new task to queue
-         Arguments:
-         NAME SCRIPT.sh NPROC
-         Default:
-         RANSrun Allrun.sh 1
-  -d     delete task from queue
-         Arguments:
-         ID
-  -l     list all tasks
+|FLAG  |   interpretation                 |
+|------|----------------------------------|
+|  -h  |   Help (this!)                   |
+|  -Y  |   run Queue                      |
+|  -X  |   Demonize the Queue             |
+|  -a  |   submit add new task to queue   |
+|      |   Arguments:                     |
+|      |   NAME SCRIPT.sh NPROC           |
+|      |   Default:                       |
+|      |   RANSrun Allrun.sh 1            |
+|  -d  |   delete task from queue         |
+|      |   Arguments:                     |
+|      |   ID                             |
+|  -l  |   list all tasks                 |
 
 
 ## Example
