@@ -77,6 +77,7 @@ void print_list(list_t ** head,int verbose)
         
 	if(strstr(line,"endTime")) {
 	  if(!strstr(line,"//") && !strstr(line,"stopAt")) {
+	    /* printf(" : %p: %s\n",ret,line); */
 	    /* printf("%d : %p: %s\n",lineCount,ret,line); */
 	    sscanf(line, "%s %f;\n", tmp, &endTime);	    
 	  }
@@ -109,7 +110,8 @@ void print_list(list_t ** head,int verbose)
 	while ((read = getline(&line, &len, controlDFile)) != -1) {
 	  // ret=strstr(line,"application"); --> address pointer to entry
 	  
-	  if(strstr(line,"Iteration =")) {
+	  if(strstr(line,"Iteration =") || strstr(line,"Time =")) {
+	    /* printf("c: %s\n",line); */
 	    sscanf(line, "%s = %f\n", tmp, &currentTime);	    
 	  }
 	}
