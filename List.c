@@ -85,6 +85,8 @@ void print_list(list_t ** head,int verbose)
 	/* lineCount+=1; */
       }
       fclose(controlDFile);
+
+      // printf("endtime %f\n",endTime);
  
       // remove ; at end
       solver[strlen(solver)-1] = '\0';
@@ -95,7 +97,6 @@ void print_list(list_t ** head,int verbose)
       strcat(controlDict,solver);
       /* printf("%42s %s\n","",controlDict); */
       controlDFile = fopen(controlDict,"r");
-
        
       if (controlDFile!=NULL) {
 
@@ -110,11 +111,18 @@ void print_list(list_t ** head,int verbose)
 	while ((read = getline(&line, &len, controlDFile)) != -1) {
 	  // ret=strstr(line,"application"); --> address pointer to entry
 	  
-	  if(strstr(line,"Iteration =") || strstr(line,"Time =")) {
+	  if(strstr(line,"Iteration =") || strstr(line,"Time =") && !strstr(line,"ExecutionTime =") ) {
 	    /* printf("c: %s\n",line); */
 	    sscanf(line, "%s = %f\n", tmp, &currentTime);	    
 	  }
+	  // foam-ext
+	  if(strstr(line,"Time iteration:")) {
+	    //printf("c: %s\n",line);
+	    sscanf(line, "Time iteration: %f\n", &currentTime);   
+	  }
 	}
+	/* printf("endtime %f\n",endTime); */
+	/* printf("currentTime %f\n",currentTime); */
 	
 	////////
 	////////
