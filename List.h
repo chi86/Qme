@@ -34,5 +34,6 @@ Task * pop_list(list_t ** head);
 void removeID_list(list_t ** head, int id);
 Task * getID_list(list_t ** head, int id);
 void moveID_list(list_t ** head,list_t ** sink, int id);
+bool existsID_list(const list_t *head, int id);
 
 #endif // TASK_H
