@@ -271,3 +271,13 @@ void moveID_list(list_t ** head,list_t ** sink, int id)
     current=current->next;
   }
 }
+
+
+bool existsID_list(const list_t *head, int id) {
+    const list_t *p = head;
+    while (p) {
+        if (p->task && p->task->id == id) return true;
+        p = p->next;
+    }
+    return false;
+}

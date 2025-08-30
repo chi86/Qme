@@ -489,7 +489,14 @@ void retrive_tasks(Queue *queue,char* root)
 	//task->time_queued=time(NULL);
 
 	// push task to the queued list, entering the QUEUED state
-	push_list(&queue->queued, task);
+	//11 push_list(&queue->queued, task);
+	if (!existsID_list(queue->queued, task->id) &&
+	    !existsID_list(queue->running, task->id)) {
+	  push_list(&queue->queued, task);
+	} else {
+	  // already known in memory → dispose duplicate object to avoid leaks
+	  task_bin(task);  // or equivalent cleanup
+	}
 
 	// make path
 	/* strcpy(newname,queued_dir); */
@@ -526,7 +533,14 @@ void retrive_tasks(Queue *queue,char* root)
 	task->time_queued=time(NULL);
 
 	// push task to the queued list, entering the QUEUED state
-	push_list(&queue->queued, task);
+	//1 push_list(&queue->queued, task);
+	if (!existsID_list(queue->queued, task->id) &&
+	    !existsID_list(queue->running, task->id)) {
+	  push_list(&queue->queued, task);
+	} else {
+	  // already known in memory → dispose duplicate object to avoid leaks
+	  task_bin(task);  // or equivalent cleanup
+	}
 
 	// just copy
 	strcpy(oldname,init_dir);
