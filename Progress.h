@@ -12,10 +12,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <dirent.h>
+#include <sys/types.h>
 
 /*
  * linked list members
  */
-void progress_openfoam();
+void progress_openfoam(char* cwd);
 
 #endif // PROGRESS_H

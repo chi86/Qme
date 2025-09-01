@@ -52,18 +52,6 @@ install:
 	install -m 0777 -d $(PREFIX)/finished
 	install -m 0777 taskid $(PREFIX)/info/
 	install -m 0777 version $(PREFIX)/info/
-	install Qme_init /etc/init.d/Qme
+	./install.sh
 	install $(PRJNAME) /usr/bin
-
-	echo "systemd:"
-	echo "cp Qme_systemd /etc/systemd/system/Qme.service"
-	echo "systemctl daemon-reload"
-	echo "systemctl start Qme.service"
-	echo "systemctl enable Qme.service"
-	echo "systemctl status Qme.service"
-	echo ""
-
-	echo "Start init process:"
-	echo "	# /etc/init.d/Qme start"
-	echo "Add Qme to runlevel:"
-	echo "	# rc-update add Qme"
+	echo "DONE"
