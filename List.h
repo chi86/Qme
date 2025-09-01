@@ -13,6 +13,7 @@
 #include <dirent.h>
 
 #include "Task.h"
+#include "Progress.h"
 
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))

@@ -20,7 +20,7 @@ INCLUDE = -I.
 CFLAGS  = -Ofast
 
 
-DEPS = main.o Task.o List.o Queue.o
+DEPS = main.o Task.o List.o Queue.o Progress.o
 
 all: $(PRJNAME)
 

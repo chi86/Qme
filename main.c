@@ -42,6 +42,7 @@
 #include "Task.h"
 #include "List.h"
 #include "Queue.h"
+#include "Progress.h"
 
 /*
  * global assignation of paths
