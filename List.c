@@ -46,8 +46,8 @@ void print_list(list_t ** head,int verbose)
     controlDFile = fopen(controlDict,"r");
     if (controlDFile!=NULL) {
       progress_openfoam(current->task->cwd);
+      fclose(controlDFile);
     }
-    fclose(controlDFile);
 
   
     current=current->next;
